@@ -83,10 +83,6 @@ function App() {
       <div className="flex flex-col justify-center items-center w-7xl mx-auto px-4 py-6">
         {!loading && <ImageUploader onFilesUpload={handleFilesUpload} />}
 
-        {loading && (
-          <p className="mt-4 text-blue-600">Extracting text from images...</p>
-        )}
-
         {combinedText?.length > 0 && (
           <textarea
             readOnly={loading}
