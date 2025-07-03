@@ -110,32 +110,23 @@ function App() {
             <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
               <div
                 className="bg-blue-600 h-full transition-all duration-200"
-                style={{ width: `${(currentProgress * 100).toFixed(0)}%` }}
+                style={{
+                  width: `${
+                    (currentFileIndex! - 1) * (100 / files.length) +
+                    currentProgress
+                  }%`,
+                }}
               />
             </div>
             <p className="mt-2 text-sm text-gray-600">
-              {(currentProgress * 100).toFixed(0)}%
+              {(
+                (currentFileIndex! - 1) * (100 / files.length) +
+                currentProgress
+              ).toFixed(0)}
+              %
             </p>
           </div>
         )}
-
-        <div className="flex flex-col items-center justify-center mt-6 w-full max-w-2xl">
-          <p className="text-gray-700 mb-2">
-            Processing image {currentFileIndex} of {files.length}
-          </p>
-          <p className="text-sm text-gray-500 mb-4 italic truncate max-w-full">
-            {currentFileName}
-          </p>
-          <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
-            <div
-              className="bg-blue-600 h-full transition-all duration-200"
-              style={{ width: `${(currentProgress * 100).toFixed(0)}%` }}
-            />
-          </div>
-          <p className="mt-2 text-sm text-gray-600">
-            {(currentProgress * 100).toFixed(0)}%
-          </p>
-        </div>
 
         {combinedText?.length > 0 && (
           <textarea
