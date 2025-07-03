@@ -1,11 +1,11 @@
-import React from "react";
 import type { ChangeEvent } from "react";
+import { Upload } from "lucide-react";
 
 interface Props {
   onFilesUpload: (files: FileList) => void;
 }
 
-export const ImageUploader: React.FC<Props> = ({ onFilesUpload }) => {
+export const ImageUploader = ({ onFilesUpload }: Props) => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       onFilesUpload(e.target.files);
@@ -14,20 +14,17 @@ export const ImageUploader: React.FC<Props> = ({ onFilesUpload }) => {
 
   return (
     <div>
-      <label
-        htmlFor="imageUpload"
-        className="inline-block cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-      >
+      <label className="flex w-max items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-green-700 transition-colors">
+        <Upload className="mr-2" />
         Upload Images
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleChange}
+          className="hidden"
+        />
       </label>
-      <input
-        id="imageUpload"
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={handleChange}
-      />
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { ImageUploader } from "./components/ImageUploader";
-
+import { Camera, Upload, FileText } from "lucide-react";
 import Tesseract from "tesseract.js";
 import heic2any from "heic2any";
+import { ScanLoader } from "./components/scanLoader";
 
-export const App: React.FC = () => {
+function App() {
   // Store uploaded files for reference if you want, optional
   const [files, setFiles] = useState<File[]>([]);
 
@@ -69,25 +70,35 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Multi Image OCR Extractor</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+            <FileText className="mr-2" />
+            Multi Image OCR Extractor
+          </h1>
+        </div>
+      </header>
+      {loading && <ScanLoader />}
+      <div className="flex flex-col justify-center items-center w-7xl mx-auto px-4 py-6">
+        {!loading && <ImageUploader onFilesUpload={handleFilesUpload} />}
 
-      <ImageUploader onFilesUpload={handleFilesUpload} />
+        {loading && (
+          <p className="mt-4 text-blue-600">Extracting text from images...</p>
+        )}
 
-      {loading && (
-        <p className="mt-4 text-blue-600">Extracting text from images...</p>
-      )}
-
-      {!loading && combinedText && (
-        <textarea
-          className="w-full min-h-[200px] mt-6 border rounded p-2 resize-y"
-          value={combinedText}
-          onChange={handleTextChange}
-          spellCheck={false}
-        />
-      )}
+        {combinedText?.length > 0 && (
+          <textarea
+            readOnly={loading}
+            className="w-full min-h-[200px] bg-white mt-6 border rounded p-2 resize-y"
+            value={combinedText}
+            onChange={handleTextChange}
+            spellCheck={false}
+          />
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default App;
