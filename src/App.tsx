@@ -24,8 +24,6 @@ function App() {
     setFiles(filesArray);
     setCombinedText(""); // reset text
 
-    let combined = "";
-
     for (let i = 0; i < filesArray.length; i++) {
       const file = filesArray[i];
       setCurrentFileIndex(i + 1); // 1-based
@@ -63,10 +61,9 @@ function App() {
           },
         });
 
-        combined += text.trim() + "\n\n";
+        setCombinedText((prev) => prev + text.trim() + "\n\n");
       } catch (error) {
         console.error("OCR error for file", file.name, error);
-        combined += `[Error extracting text from ${file.name}]\n\n`;
       }
     }
 
@@ -74,7 +71,6 @@ function App() {
     setCurrentFileName(null);
     setCurrentProgress(0);
 
-    setCombinedText(combined.trim());
     setLoading(false);
   }
 
