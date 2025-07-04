@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ImageUploader } from "./components/ImageUploader";
-import { FileText } from "lucide-react";
 import Tesseract from "tesseract.js";
 import heic2any from "heic2any";
 import { ScanLoader } from "./components/scanLoader";
+import { FileText, ClipboardCopy } from "lucide-react";
 
 function App() {
   // Store uploaded files for reference if you want, optional
@@ -11,11 +11,23 @@ function App() {
   const [currentFileIndex, setCurrentFileIndex] = useState<number | null>(null);
   const [currentFileName, setCurrentFileName] = useState<string | null>(null);
   const [currentProgress, setCurrentProgress] = useState<number>(0);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   // Store combined extracted text from all images
   const [combinedText, setCombinedText] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  // Copy to clipboard handler
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(combinedText);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 1500);
+    } catch (err) {
+      setCopySuccess(false);
+    }
+  }
 
   async function handleFilesUpload(filesList: FileList) {
     setLoading(true);
@@ -80,8 +92,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-white shadow">
+    <div className="min-h-screen max-w-full w-full bg-gray-100 flex flex-col justify-start items-center">
+      <header className="bg-white shadow w-full">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
             <FileText className="mr-2" />
@@ -92,7 +104,7 @@ function App() {
 
       {loading && <ScanLoader />}
 
-      <div className="flex flex-col justify-center items-center w-7xl mx-auto px-4 py-6">
+      <div className="box-border flex flex-col justify-center items-center w-full max-w-7xl px-4 py-6">
         {!loading && <ImageUploader onFilesUpload={handleFilesUpload} />}
 
         {loading && (
@@ -125,13 +137,31 @@ function App() {
         )}
 
         {combinedText?.length > 0 && (
-          <textarea
-            readOnly={loading}
-            className="w-full min-h-[200px] bg-white mt-6 border rounded p-2 resize-y"
-            value={combinedText}
-            onChange={handleTextChange}
-            spellCheck={false}
-          />
+          <div className="relative flex justify-center items-center w-full ">
+            <textarea
+              readOnly={loading}
+              className="w-full min-h-[200px] bg-white mt-6 border rounded p-2 resize-y"
+              value={combinedText}
+              onChange={handleTextChange}
+              spellCheck={false}
+            />
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="absolute top-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow transition-all flex items-center"
+              style={{ zIndex: 10 }}
+              aria-label="Copy to clipboard"
+              disabled={loading}
+            >
+              <ClipboardCopy className="w-5 h-5" />
+              <span className="sr-only">Copy</span>
+            </button>
+            {copySuccess && (
+              <span className="absolute top-10 right-20 bg-green-500 text-white px-2 py-1 rounded text-xs shadow">
+                Copied!
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
