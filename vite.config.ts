@@ -5,15 +5,14 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/multi-image-ocr",
+  build: {
+    outDir: "build",
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // server: {
-  //   allowedHosts: [
-  //     "9364-2605-8d80-6a28-794a-2014-bdae-7dcb-9961.ngrok-free.app",
-  //   ],
-  // },
 });
